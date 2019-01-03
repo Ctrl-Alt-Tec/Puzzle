@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>CTRL ALT TEC Puzzle (v.0.1.2)</title>
-  <script src="blockly_compressed.js"></script>
-  <script src="blocks_compressed.js"></script>
-  <script src="python_compressed.js"></script>
+  <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
+  <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
+  <script src="https://blockly-demo.appspot.com/static/python_compressed.js"></script>
   <script src="en.js"></script>
   <style>
     html, body {
@@ -356,7 +356,7 @@
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
     var demoWorkspace = Blockly.inject(blocklyDiv, {
-      media: '../../media/',
+      media: 'https://blockly-demo.appspot.com/static/media',
       toolbox: document.getElementById('toolbox'),
       grid:
         {spacing: 40,
