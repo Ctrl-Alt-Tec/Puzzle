@@ -34,10 +34,90 @@
     .blocklyDraggable .blocklyPathLight{
       stroke: none
      }
+    
+    
+    
+    
+    .logo{
+        height: 48px;
+      }
+      footer .logo{
+        margin-left: auto;
+        margin-right: auto;
+        height: 70px;
+      }
+  
+      .header{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        align-content: center;
+        position: sticky; 
+        margin: 0;
+        background-color: #e6c200;
+        width: 100%;
+        padding: 0px;
+        font-family: 'Arial';
+        font-size: 16;
+        top: 0; 
+        box-sizing: border-box;
+        justify-content: space-between;
+        flex-wrap: wrap
+      }
+      .header>*{
+        display: flex;
+        text-align: center;
+        align-items: center;
+        margin: 8px;
+        padding: 8px;
+      }
+      .header-top{
+          display: flex;
+          flex-direction: row;
+      }
+      
+      .header-toolbar{
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 658px;
+        box-sizing: border-box;
+        padding: 0px
+      }
+      .header-toolbar-button{
+        padding: 16px;
+        margin: 4px;
+        border-radius: 32px;
+        flex: 1;
+        background-color: #cdac00;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+      .header-toolbar-button .material-icons{
+        font-size: 32px !important;
+      }
+    
+    
   </style>
 </head>
 <body>
-
+  <div class="header">
+    <div class="header-top">
+      <a href="http://ctrl-alt-tec.github.io/Website" style="margin-right: 8px"><img src="https://ctrl-alt-tec.github.io/Website/img/LOGO-INLINE.png" height="48px"></a>
+      <img class="logo" src="logo-name.png">
+    </div>
+    <div class="header-toolbar">
+      <div class="header-toolbar-button link_app-tab_public"><i class="material-icons">public</i></div>
+      <div class="header-toolbar-button"><i class="material-icons">group</i></div>
+      <div class="header-toolbar-button link_app-tab_balance"><i class="material-icons">account_circle</i>a01023646</div>
+    </div>
+  </div>
+  
   <div id="blocklyArea"></div>
   <div id="blocklyDiv" style="position: absolute"></div>
 
@@ -348,8 +428,8 @@
       </block>
     </category>
     <sep></sep>
-    <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
-    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+    <category name="VARIABLES" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+    <category name="FUNCTIONS" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
   </xml>
 
   <script>
