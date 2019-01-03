@@ -58,8 +58,14 @@
     var demoWorkspace = Blockly.inject(blocklyDiv,
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
+    
+    function toCode(event) {
+      var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+      console.log(code);
+    }
+    demoWorkspace.addChangeListener(toCode);
+    
     var onresize = function(e) {
-      // Compute the absolute coordinates and dimensions of blocklyArea.
       var element = blocklyArea;
       var x = 0;
       var y = 0;
