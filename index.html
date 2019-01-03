@@ -60,7 +60,7 @@
          toolbox: document.getElementById('toolbox')});
     
     function toCode(event) {
-      var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+      var code = Blockly.Python.workspaceToCode(demoWorkspace);
       console.log(code);
     }
     demoWorkspace.addChangeListener(toCode);
