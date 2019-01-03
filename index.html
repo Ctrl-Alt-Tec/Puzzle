@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CTRL ALT TEC Puzzle (v.0.01)</title>
+  <title>CTRL ALT TEC Puzzle (v.0.1.2)</title>
   <script src="blockly_compressed.js"></script>
   <script src="blocks_compressed.js"></script>
   <script src="python_compressed.js"></script>
@@ -50,9 +50,16 @@
   <script>
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
-    var demoWorkspace = Blockly.inject(blocklyDiv,
-        {media: '../../media/',
-         toolbox: document.getElementById('toolbox')});
+    var demoWorkspace = Blockly.inject(blocklyDiv, {
+      media: '../../media/',
+      toolbox: document.getElementById('toolbox'),
+      grid:
+        {spacing: 40,
+        length: 3,
+        colour: '#ccc',
+        snap: true},
+      trashcan: true    
+    });
     
     function toCode(event) {
       var code = Blockly.Python.workspaceToCode(demoWorkspace);
