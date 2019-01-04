@@ -2,12 +2,11 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CTRL+ALT+TEC Puzzle (v.0.9.4)</title>
+  <title>CTRL+ALT+TEC Puzzle (v.0.9.5)</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/python_compressed.js"></script>
-  <script src="https://blockly-demo.appspot.com/static/javascript_compressed.js"></script>
   <script src="acorn_interpreter.js"></script>
   <script src="en.js"></script>
   <style>
@@ -483,12 +482,28 @@
     Blockly.svgResize(demoWorkspace);
     
     
-    var codeJS = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+    function initApi(interpreter, scope) {
+      // Add an API function for the alert() block.
+      var wrapper = function(text) {
+        return alert(arguments.length ? text : '');
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for the prompt() block.
+      wrapper = function(text) {
+        return prompt(text);
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(wrapper));
+    }
+    
    
 
     
     function execute(){
-      var interpreterJS = new Interpreter(codeJS);
+      var codeJS = Blockly.JavaScript.workspaceToCode(demoWorkspace);
+      var interpreterJS = new Interpreter(codeJS, initApi);
       interpreterJS.run()
     }
     
