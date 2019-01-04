@@ -487,7 +487,7 @@
       window.LoopTrap = 1000;
       Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if(--window.LoopTrap == 0) throw "Infinite loop.";\n';
       Blockly.JavaScript.addReservedWords('code');
-      var code = Blockly.JavaScript.workspaceToCode(workspace);
+      var code = Blockly.JavaScript.workspaceToCode(demoWorkspace);
       try {
         eval(code);
       } catch (e) {
