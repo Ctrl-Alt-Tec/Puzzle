@@ -7,6 +7,8 @@
   <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/python_compressed.js"></script>
+  <script src="https://blockly-demo.appspot.com/static/javascript_compressed.js"></script>
+  <script src="acorn_interpreter.js"></script>
   <script src="en.js"></script>
   <style>
     html, body {
@@ -455,7 +457,7 @@
     });
     
     function toCode(event) {
-      var code = Blockly.Python.workspaceToCode(demoWorkspace);
+      var codePython = Blockly.Python.workspaceToCode(demoWorkspace);
       console.log(code);
     }
     demoWorkspace.addChangeListener(toCode);
@@ -479,6 +481,39 @@
     window.addEventListener('resize', onresize, false);
     onresize();
     Blockly.svgResize(demoWorkspace);
+    
+    
+    var codeJS = Blockly.Javascript.workspaceToCode(demoWorkspace);
+    function initApi(interpreter, scope) {
+      // Add an API function for the alert() block.
+      var wrapper = function(text) {
+        return alert(arguments.length ? text : '');
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(wrapper));
+
+      // Add an API function for the prompt() block.
+      wrapper = function(text) {
+        return prompt(text);
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(wrapper));
+      
+      
+      // Add an API function for highlighting blocks.
+      var wrapper = function(id) {
+        return workspace.highlightBlock(id);
+      };
+      interpreter.setProperty(scope, 'highlightBlock',
+          interpreter.createNativeFunction(wrapper));
+    }
+
+    var interpreter = new Interpreter(codeJS, initApi);
+    
+    function execute(){
+      interpreter.run()
+    }
+    
   </script>
 </body>
 </html>
