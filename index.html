@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CTRL+ALT+TEC Puzzle (v.0.9.9)</title>
+  <title>CTRL+ALT+TEC Puzzle (v.0.9 Beta)</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
@@ -114,9 +114,8 @@
       <img class="logo" src="logo-name.png">
     </div>
     <div class="header-toolbar">
-      <div class="header-toolbar-button link_app-tab_public"><i class="material-icons">public</i></div>
-      <div class="header-toolbar-button"><i class="material-icons">group</i></div>
-      <div class="header-toolbar-button link_app-tab_balance"><i class="material-icons">account_circle</i>a01023646</div>
+      <div class="header-toolbar-button"><i class="material-icons">code</i></div>
+      <div class="header-toolbar-button button_execute"><i class="material-icons">play_arrow</i></div>
     </div>
   </div>
   
@@ -494,6 +493,7 @@
         alert(e);
       }       
     }
+    document.querySelector(".button_execute").addEventListener("click", execute)
     
   </script>
 </body>
