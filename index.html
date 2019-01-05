@@ -118,7 +118,8 @@
         padding: 8px;
         white-space: pre;
         width: 300px;
-        overflow: auto
+        overflow: auto;
+        font-family: 'Source Code Pro', monospace
       }
 
       @media only screen and (max-width: 650px) {
@@ -148,11 +149,28 @@
   <div class="app-container">
     <div id="blocklyDiv" style="position: absolute"></div>
     <div id="codeDiv">
-      www
+      ## PYTHON CODE WILL BE GENERTED HERE ## 
+      ## ================================= ##
     </div>
   </div>
 
   <xml id="toolbox" style="display: none">
+    <category name="INPUT/OUTPUT" colour="#757575">
+      <block type="text_print">
+          <value name="TEXT">
+            <shadow type="text">
+              <field name="TEXT">abc</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="text_prompt_ext">
+          <value name="TEXT">
+            <shadow type="text">
+              <field name="TEXT">abc</field>
+            </shadow>
+          </value>
+        </block>
+    </category>
     <category name="LOGIC" colour="%{BKY_LOGIC_HUE}">
       <block type="controls_if"></block>
       <block type="logic_compare"></block>
@@ -354,20 +372,6 @@
           </shadow>
         </value>
       </block>
-      <block type="text_print">
-        <value name="TEXT">
-          <shadow type="text">
-            <field name="TEXT">abc</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="text_prompt_ext">
-        <value name="TEXT">
-          <shadow type="text">
-            <field name="TEXT">abc</field>
-          </shadow>
-        </value>
-      </block>
     </category>
     <category name="ARRAYS" colour="%{BKY_LISTS_HUE}">
       <block type="lists_create_with">
@@ -467,7 +471,7 @@
     var blocklyArea = document.getElementById('blocklyArea');
     var blocklyDiv = document.getElementById('blocklyDiv');
     var demoWorkspace = Blockly.inject(blocklyDiv, {
-      media: 'https://blockly-demo.appspot.com/static/media',
+      media: 'https://blockly-demo.appspot.com/static/media/',
       toolbox: document.getElementById('toolbox'),
       grid:
         {spacing: 40,
@@ -486,14 +490,18 @@
     
     function toCode(event) {
       var codePython = Blockly.Python.workspaceToCode(demoWorkspace);
-      document.querySelector("#codeDiv").innerHTML = codePython;
+      document.querySelector("#codeDiv").innerHTML = "## PYTHON CODE WILL BE GENERTED HERE ##\n## ================================= ##\n"+codePython;
     }
     demoWorkspace.addChangeListener(toCode);
     Blockly.svgResize(demoWorkspace);
-    
-    
+  
+    function highlightBlock(id) {
+      demoWorkspace.highlightBlock(id);
+    }
         
     function execute(){
+      Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+      Blockly.JavaScript.addReservedWords('highlightBlock');
       window.LoopTrap = 1000;
       Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if(--window.LoopTrap == 0) throw "Infinite loop.";\n';
       Blockly.JavaScript.addReservedWords('code');
