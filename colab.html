@@ -8,13 +8,15 @@
   <script>
     TogetherJSConfig_cloneClicks = true;
     TogetherJSConfig_includeHashInUrl = true; 
+    TogetherJSConfig_ignoreForms = true;
   </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/python_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/javascript_compressed.js"></script>
-  <script src="https://togetherjs.com/togetherjs.js"></script>
+  <script src="https://togetherjs.com/togetherjs-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
   <script src="en.js"></script>
   <style>
     html, body {
@@ -484,18 +486,28 @@
   </xml>
 
   <script>
-    listen = true;
+    var editor = ace.edit("codeDiv");
+    editor.setTheme("ace/theme/xcode");
+    editor.session.setMode("ace/mode/python");
+    editor.setReadOnly(true); 
+
+    var visibilityChangeFromRemote = false;
 
     TogetherJS.hub.on("updateCode", function (msg) {
       if (! msg.sameUrl) {
         return;
+      } 
+      visibilityChangeFromRemote = true;
+      demoWorkspace.removeChangeListener(toCode);        
+      try{ 
+        Blockly.Events.fromJson(msg.event, demoWorkspace).run(true);
+      }finally{
+        demoWorkspace.addChangeListener(toCode);
+        visibilityChangeFromRemote = false;
       }
-      listen = false;
-      Blockly.Events.fromJson(msg.event, demoWorkspace).run(true)
-      listen = true;
-      return;
-      console.log(msg.event);
-     });
+      //console.log(msg);
+    });
+    
     
     
     var blocklyArea = document.getElementById('blocklyArea');
@@ -520,21 +532,19 @@
     });
 
 
-    function toCode(event) {
-      var codePython = Blockly.Python.workspaceToCode(demoWorkspace);
-      document.querySelector("#codeDiv").innerHTML = "## PYTHON CODE WILL BE GENERTED HERE ##\n## ================================= ##\n"+codePython;
-    }
-    demoWorkspace.addChangeListener(function(e){
-      if(e.type == 'ui'){
-        return
+    function toCode(e) {
+      console.log(e)
+      if(e.type == 'ui' || visibilityChangeFromRemote){
+        return;
       }
-      if(listen){
+      if(TogetherJS.running && !visibilityChangeFromRemote){
         TogetherJS.send({type: 'updateCode', event: e.toJson()});
       }
-      toCode()
-    });
+      var codePython = Blockly.Python.workspaceToCode(demoWorkspace);
+      editor.setValue("## PYTHON CODE WILL BE GENERTED HERE ##\n## ================================= ##\n"+codePython);
+    }
+    demoWorkspace.addChangeListener(toCode);
     Blockly.svgResize(demoWorkspace);
-  
     function highlightBlock(id) {
       demoWorkspace.highlightBlock(id);
     }

@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.75">
 
   <title>CTRL+ALT+TEC Puzzle</title>
+  <script>
+    TogetherJSConfig_cloneClicks = true;
+    TogetherJSConfig_includeHashInUrl = true; 
+    TogetherJSConfig_ignoreForms = true;
+  </script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://blockly-demo.appspot.com/static/blockly_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/blocks_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/python_compressed.js"></script>
   <script src="https://blockly-demo.appspot.com/static/javascript_compressed.js"></script>
+  <script src="https://togetherjs.com/togetherjs-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
   <script src="en.js"></script>
   <style>
     html, body {
@@ -111,18 +118,28 @@
       #blocklyDiv{
         position: relative !important;
         flex: 2;
-        
+      }
+      .blocklyToolboxDiv{
+        background-color: white
+      }
+      .blocklyTreeRow{
+        padding: 8px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600
+      }
+      .blocklyFlyoutBackground{
+        fill-opacity: 0.5
       }
       #codeDiv{
         border-left: 1px solid rgb(160,160,160);
         padding: 8px;
         white-space: pre;
-        width: 300px;
+        width: 500px;
         overflow: auto;
         font-family: 'Source Code Pro', monospace
       }
 
-      @media only screen and (max-width: 650px) {
+      @media only screen and (max-width: 800px) {
         #codeDiv{
           width: 100%;
           border-left: none;
@@ -141,6 +158,7 @@
     </div>
     <div class="header-toolbar">
       <div class="header-toolbar-button" style="flex: 100; background: transparent"></div>
+      <div class="header-toolbar-button button_together" onclick="TogetherJS(this); return false;"><i class="material-icons">live_tv</i></div>
       <div class="header-toolbar-button button_code"><i class="material-icons">code</i></div>
       <div class="header-toolbar-button button_execute"><i class="material-icons">play_arrow</i></div>
     </div>
@@ -468,8 +486,32 @@
   </xml>
 
   <script>
+    var editor = ace.edit("codeDiv");
+    editor.setTheme("ace/theme/xcode");
+    editor.session.setMode("ace/mode/python");
+    editor.setReadOnly(true); 
+
+    var visibilityChangeFromRemote = false;
+
+    TogetherJS.hub.on("updateCode", function (msg) {
+      if (! msg.sameUrl) {
+        return;
+      } 
+      visibilityChangeFromRemote = true;
+      demoWorkspace.removeChangeListener(toCode);        
+      try{ 
+        Blockly.Events.fromJson(msg.event, demoWorkspace).run(true);
+      }finally{
+        demoWorkspace.addChangeListener(toCode);
+        visibilityChangeFromRemote = false;
+      }
+      //console.log(msg);
+    });
+    
+    
+    
     var blocklyArea = document.getElementById('blocklyArea');
-    var blocklyDiv = document.getElementById('blocklyDiv');
+    var blocklyDiv = document.getElementById('blocklyDiv'); 
     var demoWorkspace = Blockly.inject(blocklyDiv, {
       media: 'https://blockly-demo.appspot.com/static/media/',
       toolbox: document.getElementById('toolbox'),
@@ -485,16 +527,24 @@
             maxScale: 3,
             minScale: 0.3,
             scaleSpeed: 1.2},
-      trashcan: true    
+      trashcan: true,
+ 
     });
-    
-    function toCode(event) {
+
+
+    function toCode(e) {
+      console.log(e)
+      if(e.type == 'ui' || visibilityChangeFromRemote){
+        return;
+      }
+      if(TogetherJS.running && !visibilityChangeFromRemote){
+        TogetherJS.send({type: 'updateCode', event: e.toJson()});
+      }
       var codePython = Blockly.Python.workspaceToCode(demoWorkspace);
-      document.querySelector("#codeDiv").innerHTML = "## PYTHON CODE WILL BE GENERTED HERE ##\n## ================================= ##\n"+codePython;
+      editor.setValue("## PYTHON CODE WILL BE GENERTED HERE ##\n## ================================= ##\n"+codePython);
     }
     demoWorkspace.addChangeListener(toCode);
     Blockly.svgResize(demoWorkspace);
-  
     function highlightBlock(id) {
       demoWorkspace.highlightBlock(id);
     }
@@ -528,8 +578,8 @@
     })
     document.querySelector(".button_code").addEventListener("click", toggleCode)
     document.querySelector(".button_execute").addEventListener("click", execute)
-    
   </script>
+
 </body>
 </html>
 
