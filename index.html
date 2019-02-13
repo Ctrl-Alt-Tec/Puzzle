@@ -65,7 +65,7 @@
         align-content: center;
         position: sticky; 
         margin: 0;
-        background-color: white;
+        background-color: rgb(40,40,40);
         width: 100%;
         padding: 0px;
         font-family: 'Arial';
@@ -160,6 +160,21 @@
         font-family: 'Source Code Pro';
         pointer-events: all
       }
+      .challenge{
+        margin: 16px;
+      }
+      .challenge * {
+        margin: 4px
+      }
+      .challenge-header{
+        font-size: 16px;
+        font-weight: 800;
+        color: rgb(100,100,100);
+      }
+      .challenge-content{
+        font-size: 18px;
+        font-weight: 600
+      }
   </style>
 </head>
 <body>
@@ -189,7 +204,7 @@ var modes = {
   'javascript': {
     mode: 'javascript',
     viewSettings: {
-      padding: 4,
+      padding: 8,
     }, 
     palette: [
       {
@@ -263,6 +278,19 @@ var modes = {
     ]
   }}
   var editor = new droplet.Editor(document.querySelector("#blocklyDiv"), modes['javascript']);
+  var challengeDiv = document.createElement("div");
+  challengeDiv.classList.add("challenge");
+
+  var challengeDivHeader = document.createElement("div");
+  challengeDivHeader.classList.add("challenge-header");
+  challengeDivHeader.innerText = "TODAY'S CHALLENGE"
+
+  var challengeDivContent = document.createElement("div");
+  challengeDivContent.classList.add("challenge-content");
+  challengeDivContent.innerText = "Lorem Ipsum Dolor Sit Atem"
+  challengeDiv.append(challengeDivHeader, challengeDivContent)
+  document.querySelector(".droplet-palette-wrapper").prepend(challengeDiv)
+
   document.querySelector(".button_code").addEventListener("click", function(){
     editor.toggleBlocks()
   })
@@ -291,7 +319,11 @@ var modes = {
     setTimeout(function(){updateLive=true}, 20);
   })
 
- 
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftwitrss.me%2Ftwitter_user_to_rss%2F%3Fuser%3DCtrlAltTec').then(function(response){
+    response.json().then(function(challenge){
+      document.querySelector('.challenge-content').innerHTML = "<a href='"+challenge['items'].find(function(i){return i['title'].includes('#TodaysChallenge')})['link']+"'>"+challenge['items'].find(function(i){return i['title'].includes('#TodaysChallenge')})['title'].split("#TodaysChallenge")[1]+"</a>"
+    })
+  })
   </script>
 
 </body>
