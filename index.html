@@ -46,7 +46,19 @@
       flex-wrap: wrap
     }
     
-    
+    .fab{
+      position: fixed;
+      bottom: 27px;
+      right: 32px;
+      width: 80px;
+      height: 80px;
+      background-color: rgb(76,217,100);
+      border-radius: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999
+    }
     
     
     .logo{
@@ -123,6 +135,13 @@
       }
       .droplet-palette-wrapper{
         width: 320px !important;
+        overflow: auto;
+      }
+      .droplet-palette-scroller{
+        position: relative;
+        overflow: visible;
+        height: auto;
+        margin-bottom: 24px
       }
       .droplet-palette-header,.droplet-palette-canvas{
         background: transparent !important;
@@ -132,8 +151,12 @@
         width: 100%;
       }
       .droplet-palette-canvas{
-        height: 100% !important;
         overflow: overlay
+      }
+      .droplet-palette-element{
+        position: relative;
+        height: auto;
+        padding-bottom: 24px;
       }
       .droplet-wrapper-div{
         z-index: 1000; 
@@ -163,7 +186,7 @@
       .challenge{
         margin: 16px;
       }
-      .challenge * {
+      .challenge>* {
         margin: 4px
       }
       .challenge-header{
@@ -173,7 +196,15 @@
       }
       .challenge-content{
         font-size: 18px;
-        font-weight: 600
+        font-weight: 600;
+        white-space: pre-line;
+      }
+
+
+      /*twitter*/
+      img.Emoji--forText{
+        height: 16px;
+        margin: 0px;
       }
   </style>
 </head>
@@ -187,7 +218,6 @@
       <div class="header-toolbar-button" style="flex: 100; background: transparent"></div>
       <div class="header-toolbar-button button_together" onclick="TogetherJS(this); return false;"><i class="material-icons">live_tv</i></div>
       <div class="header-toolbar-button button_code"><i class="material-icons">code</i></div>
-      <div class="header-toolbar-button button_execute"><i class="material-icons">play_arrow</i></div>
     </div>
   </div>
   
@@ -195,11 +225,10 @@
     <div id="blocklyDiv" ></div>
     
   </div>
-
- 
-
-  <script>
-    
+  <div class="fab button_execute" style="display: flex;">
+        <i class="material-icons" style="font-size: 64px;">play_arrow</i>
+    </div>
+  <script>    
 var modes = {
   'javascript': {
     mode: 'javascript',
@@ -209,7 +238,7 @@ var modes = {
     palette: [
       {
         'name': 'Input/Output',
-        'color': 'blue',
+        'color': 'cyan',
         'blocks': [
           {'block': 'alert("hello");'},
           {'block': 'var a = prompt("hello");'},
@@ -250,9 +279,10 @@ var modes = {
         ]
       },
       {
-        'name': 'Operators',
+        'name': 'Math',
         'color': 'green',
         'blocks': [
+          {'block': 'Number(a)'},
           {'block': 'a + b'},
           {'block': 'a - b'},
           {'block': 'a * b'},
@@ -266,7 +296,7 @@ var modes = {
         ]
       },
       {
-        'name': 'Control flow',
+        'name': 'Loops',
         'color': 'orange',
         'blocks': [
           {'block': 'for (var i = 0; i < 10; i++) {\n  __\n}'},
@@ -321,7 +351,7 @@ var modes = {
 
   fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftwitrss.me%2Ftwitter_user_to_rss%2F%3Fuser%3DCtrlAltTec').then(function(response){
     response.json().then(function(challenge){
-      document.querySelector('.challenge-content').innerHTML = "<a href='"+challenge['items'].find(function(i){return i['title'].includes('#TodaysChallenge')})['link']+"'>"+challenge['items'].find(function(i){return i['title'].includes('#TodaysChallenge')})['title'].split("#TodaysChallenge")[1]+"</a>"
+      document.querySelector('.challenge-content').innerHTML = challenge['items'].find(function(i){return i['title'].includes('#TodaysChallenge')})['content']
     })
   })
   </script>
