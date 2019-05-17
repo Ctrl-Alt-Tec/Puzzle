@@ -41,7 +41,7 @@
      }
     .app-container{
       display: flex;
-      flex-direction: row;
+      /*flex-direction: row;*/ flex-direction: column;
       flex-grow: 2;
       flex-wrap: wrap
     }
@@ -133,6 +133,15 @@
         flex: 2;
         background-color: whitesmoke !important
       }
+      #console{
+        font-family: 'Consolas', monospace;
+        padding: 16px;
+        border-top: 1px solid rgb(200,200,200);
+        font-size: 14px;
+        max-height: 24vh; 
+        white-space: pre;
+        overflow: auto
+      }
       .droplet-palette-wrapper{
         width: 320px !important;
         overflow: auto;
@@ -223,25 +232,37 @@
   
   <div class="app-container">
     <div id="blocklyDiv" ></div>
-    
+    <div id="console"></div>
   </div>
   <div class="fab button_execute" style="display: flex;">
         <i class="material-icons" style="font-size: 64px;">play_arrow</i>
     </div>
   <script>    
-var modes = {
-  'javascript': {
+    var modes = {
     mode: 'javascript',
     viewSettings: {
       padding: 8,
     }, 
+    modeOptions: {
+      functions: {
+        'prompt' : {value: true, command: false},
+        'document.write' : {command: false},
+        'Number' : {command: false, value: true},
+        'a' : {command: false, value: true},
+        'Math.pow' : {command: false},
+        'Math.sin' : {command: false},
+        'Math.tan' : {command: false},
+        'Math.cos' : {command: false},
+        'Math.random' : {command: false},
+      }
+    },
     palette: [
       {
         'name': 'Input/Output',
         'color': 'cyan',
         'blocks': [
-          {'block': 'alert("hello");'},
-          {'block': 'var a = prompt("hello");'},
+          {'block': 'document.write("hello");'},
+          {'block': 'prompt("hello");', value: true},
         ]
       },
       {
@@ -263,6 +284,7 @@ var modes = {
         'blocks': [
           {'block': 'function myFunction(param) {\n  __\n}'},
           {'block': 'myFunction(arg);'},
+          {'block': 'return(a);'},
         ]
       },
       {
@@ -306,8 +328,13 @@ var modes = {
         ]
       },
     ]
-  }}
-  var editor = new droplet.Editor(document.querySelector("#blocklyDiv"), modes['javascript']);
+  }
+
+  document.write = function(message) {
+    document.getElementById('console').innerHTML = document.getElementById('console').innerHTML+message+"\n";
+  };
+
+  var editor = new droplet.Editor(document.querySelector("#blocklyDiv"), modes);
   var challengeDiv = document.createElement("div");
   challengeDiv.classList.add("challenge");
 
@@ -325,6 +352,7 @@ var modes = {
     editor.toggleBlocks()
   })
   document.querySelector(".button_execute").addEventListener("click", function(){
+    document.getElementById('console').innerHTML = "";
     try {
       eval(editor.getValue())
     } catch (error) {
